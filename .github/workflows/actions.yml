@@ -15,7 +15,7 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
+  # This workflow contains multiple jobs: "build", "deploy" and "update"
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -48,7 +48,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
-    # depend on another job (for ex. build)
+    # depend on another job (for ex. "build"), so this runs sequentially
     needs: build
 
     # runs this job even if the build job is not successful
@@ -58,7 +58,7 @@ jobs:
       - name: Run another one-line script
         run: echo "Hello, galaxy!"
 
-  # This runs in parallel
+  # This runs in parallel (jobs by default run in parallel)
   update:
     runs-on: ubuntu-latest
 
