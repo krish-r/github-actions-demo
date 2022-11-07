@@ -39,3 +39,41 @@ jobs:
       - name: Run demo.sh
         run: sh ./demo.sh
         shell: bash
+
+      # Runs the command on failure by checking the status check function: failure()
+      - name: Run on failure
+        if: ${{ failure() }}
+        run: echo "one of the previous step(s) failed"
+
+  deploy:
+    runs-on: ubuntu-latest
+
+    # depend on another job (for ex. build)
+    needs: build
+
+    # runs this job even if the build job is not successful
+    if: ${{ always() }}
+
+    steps:
+      - name: Run another one-line script
+        run: echo "Hello, galaxy!"
+
+  # This runs in parallel
+  update:
+    runs-on: ubuntu-latest
+
+    # Environment variables (this will be available for all the steps in the job)
+    env:
+      ENV_KEY1: "universe"
+
+    steps:
+      - name: Using contexts
+        # uses runner.os context to get the operating system of the runner
+        run: echo "Hello from ${{ runner.os }}"
+
+      - name: Run another one-line script
+        env:
+          ENV_KEY2: "Hello"
+
+        # uses global and step environment variables
+        run: echo "$ENV_KEY2, $ENV_KEY1!"
